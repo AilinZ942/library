@@ -20,7 +20,7 @@ const submitForm = () => {
   validatePassword(true)
   validateConfirmPassword(true)
   findFriend(true)
-  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword && !message.value.reason) {
+  if (!errors.value.username && !errors.value.password && !errors.value.confirmPassword) {
     submittedCards.value.push({ ...formData.value })
     clearForm()
   }

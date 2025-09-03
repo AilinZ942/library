@@ -9,13 +9,36 @@
             >Home (Week 5)</router-link
           >
         </li>
+        <li class="nav-item" v-if="!isAuthed">
+          <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+        </li>
+        <li class="nav-item" v-else>
+          <router-link to="/logout" class="nav-link" active-class="active">Logout</router-link> 
+        </li>
+
         <li class="nav-item">
           <router-link to="/about" class="nav-link" active-class="active">About</router-link>
         </li>
       </ul>
     </header>
   </div>
+  <div v-if="notice" class="alert alert-warning py-2 mb-0 text-center">{{ notice }}</div>
 </template>
+
+<script setup>
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
+
+const isAuthed = ref(localStorage.getItem('isAuthed') === 'true')
+
+watch(() => route.fullPath, () => {
+  isAuthed.value = localStorage.getItem('isAuthed') === 'true'
+})
+
+</script>
+
 
 <style scoped>
 .b-example-divider {
