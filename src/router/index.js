@@ -44,8 +44,7 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const isAuthed = localStorage.getItem('isAuthed') === 'true'
   if (to.meta?.requiresAuth && !isAuthed) {
-    window.dispatchEvent(new CustomEvent('auth:denied', { detail: { to: to.fullPath } }))
-    return next(false)   
+    return next({ name: 'Login', query: { redirect: to.fullPath } })
   }
   next()
 })
