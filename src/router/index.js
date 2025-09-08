@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import LoginView from '../views/LoginView.vue'
+import FirebaseSigninView from '../views/FirebaseSigninView.vue'
+import FirebaseRegisterView from '../views/FirebaseRegisterView.vue'
 
 const routes = [
   {
@@ -16,24 +18,20 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: '/FireLogin',
+    name: 'FireLogin',
+    component: FirebaseSigninView,
+  },
+  {
+    path: '/FireRegister',
+    name: 'FireRegister',
+    component: FirebaseRegisterView,
+  },
+  {
     path: '/login',
     name: 'Login',
     component: LoginView
-  },
-  {
-      path: '/logout',
-      name: 'Logout',
-      beforeEnter: (to, from, next) => {
-        const isAuthed = localStorage.getItem('isAuthed') === 'true'
-        if (!isAuthed) {
-          window.dispatchEvent(new CustomEvent('logout:denied'))
-          return next(false)
-        }
-        localStorage.removeItem('isAuthed')
-        localStorage.removeItem('authedUser')
-        next({ name: 'Login' })
-      }
-    },
+  }
 ]
 
 const router = createRouter({
