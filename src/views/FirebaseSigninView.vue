@@ -10,15 +10,21 @@ import {ref} from "vue"
 import {getAuth, signInWithEmailAndPassword} from "firebase/auth"
 import {useRouter} from "vue-router"
 
+const adminEmail = "admin@admin.com"
 const email = ref("")
 const password = ref("")
 const router = useRouter()
 const auth = getAuth()
 const signin = () => {
     signInWithEmailAndPassword(auth, email.value, password.value)
-    .then((date) => {
+    .then((data) => {
         console.log("Firebase Sign in Successful!")
-        router.push("/FireLogin")
+        const user = data.user
+        const role = user.email === adminEmail ? "admin" : "member"
+        localStorage.setItem("isAuthed", "true")
+        localStorage.setItem("role", role)
+        router.push("/")
+        console.log(auth.currentUser)
     }).catch((error) => {
         console.log(error.code);
     })
