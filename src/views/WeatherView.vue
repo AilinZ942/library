@@ -58,6 +58,12 @@
           });
         }
       },
+      async searchByCity() {
+        const url = `http://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
+          this.city
+        )}&appid=${apikey}`;
+        await this.fetchWeatherData(url)
+      },
       async fetchWeatherData(url) {
         try {
           const response = await axios.get(url);

@@ -11,16 +11,21 @@ export default {
     mounted() {
         this.getBookCountAPI();
     },
+    computed: {
+        jsonFormat() {
+        return this.jsondata ? JSON.stringify(this.jsondata, null, 2) : '';
+        }
+    },
     methods: {
         async getBookCountAPI() {
             try {
-                const response = await axios.get('https://us-central1-week7-ailin.cloudfunctions.net/countBooks')
+                const response = await axios.get('https://us-central1-week7-ailin.cloudfunctions.net/listBooks')
                 this.jsondata = response.data;
                 this.error = null;
             } catch (error) {
                 console.error('Error fetching book count:', error);
                 this.error = error;
-                this.count = null;
+                this.jsondata = null;
             }
         },
     },
@@ -28,5 +33,5 @@ export default {
 </script>
 
 <template>
-    <pre>{{ jsondata }}</pre>
+    <pre>{{ jsonFormat }}</pre>
 </template>
