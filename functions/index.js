@@ -7,8 +7,9 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-// const {setGlobalOptions} = require("firebase-functions");
+const {setGlobalOptions} = require("firebase-functions");
 const {onRequest} = require("firebase-functions/v2/https");
+const {onDocumentCreated} = require("firebase-functions/v2/firestore");
 // const logger = require("firebase-functions/logger");
 
 const admin = require("firebase-admin");
@@ -27,7 +28,7 @@ admin.initializeApp();
 // In the v1 API, each function can only serve one request per container, so
 // this will be the maximum concurrent request count.
 
-// setGlobalOptions({ maxInstances: 10 });
+setGlobalOptions({region: "australia-southeast1"});
 
 // Create and deploy your first functions
 // https://firebase.google.com/docs/functions/get-started
@@ -63,3 +64,20 @@ exports.listBooks = onRequest(async (req, res) => {
     }
   });
 });
+
+exports.uppercaseBookOnCreate = onDocumentCreated(
+    "books/{bookId}",
+    async (event) => {
+      const snap = event.data;
+      if (!snap) return;
+      const data = snap.data();
+      if (data && data._normalized === true) return;
+      const uppercased = {};
+      for (const [key, val] of Object.entries(data || {})) {
+        uppercased[key] = (typeof val === "string") ? val.toUpperCase() : val;
+      }
+      uppercased._normalized = true;
+      await snap.ref.update(uppercased);
+    },
+);
+
